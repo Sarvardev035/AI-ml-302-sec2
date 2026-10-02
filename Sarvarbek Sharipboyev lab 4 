@@ -1,0 +1,1546 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/Sarvardev035/AI-ml-302-sec2/blob/main/Sarvarbek%20Sharipboyev%20lab%204%20\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "LGlhYSuFpRfs"
+      },
+      "source": [
+        "# Lab: PyTorch Fundamentals\n",
+        "\n",
+        "This notebook has two parts.\n",
+        "\n",
+        "| Part | What you do |\n",
+        "| ----- | ----- |\n",
+        "| **Part A: Introduction to PyTorch** | Read and run the cells. Nothing to submit. |\n",
+        "| **Part B: Exercises** | 10 practical exercises, 10 marks each. |\n",
+        "\n",
+        "\n",
+        "**How to use this notebook:** run the cells from top to bottom (`Shift + Enter`). In Google Colab you can switch on a GPU with *Runtime -> Change runtime type -> GPU* (optional, everything also works on CPU)."
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "wo9BQqRCpRfu"
+      },
+      "source": [
+        "---\n",
+        "# Part A: Introduction to PyTorch\n",
+        "\n",
+        "[PyTorch](https://pytorch.org/) is an open source deep learning framework. It lets you store data as **tensors**, do fast maths on them (on CPU or GPU), and build neural networks.\n",
+        "\n",
+        "In this part we cover only what you need most:\n",
+        "\n",
+        "| Section | Topic |\n",
+        "| ----- | ----- |\n",
+        "| 1 | Importing PyTorch |\n",
+        "| 2 | What is a tensor? (scalar, vector, matrix, tensor) |\n",
+        "| 3 | Creating tensors (random, zeros, ones, ranges) |\n",
+        "| 4 | Tensor datatypes |\n",
+        "| 5 | Getting information from a tensor (shape, dtype, device) |\n",
+        "| 6 | Tensor operations and matrix multiplication |\n",
+        "| 7 | Aggregation (min, max, mean, sum) |\n",
+        "| 8 | Changing the shape of a tensor |\n",
+        "| 9 | Indexing |\n",
+        "| 10 | PyTorch and NumPy |\n",
+        "| 11 | Reproducibility (random seed) |\n",
+        "| 12 | Running tensors on a GPU |"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "E52MiSv6pRfv"
+      },
+      "source": [
+        "## 1. Importing PyTorch"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "nM7LC3m1pRfv"
+      },
+      "outputs": [],
+      "source": [
+        "import torch\n",
+        "print(torch.__version__)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Tensors are the fundamental building block of machine learning.\n",
+        "\n",
+        "Their job is to represent data in a numerical way.\n",
+        "\n",
+        "For example, you could represent an image as a tensor with shape `[3, 224, 224]` which would mean `[colour_channels, height, width]`, as in the image has `3` colour channels (red, green, blue), a height of `224` pixels and a width of `224` pixels.\n",
+        "\n",
+        "![example of going from an input image to a tensor representation of the image, image gets broken down into 3 colour channels as well as numbers to represent the height and width](https://raw.githubusercontent.com/mrdbourke/pytorch-deep-learning/main/images/00-tensor-shape-example-of-image.png)\n",
+        "\n",
+        "In tensor-speak (the language used to describe tensors), the tensor would have three dimensions, one for `colour_channels`, `height` and `width`.\n",
+        "\n",
+        "But we're getting ahead of ourselves.\n",
+        "\n",
+        "Let's learn more about tensors by coding them."
+      ],
+      "metadata": {
+        "id": "0_TbcCc-r9OU"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "AJaXeKwOpRfw"
+      },
+      "source": [
+        "## 2. What is a tensor?\n",
+        "\n",
+        "A **tensor** is a container of numbers. It is the basic building block of deep learning: images, text, audio and tables are all turned into tensors before a model can use them.\n",
+        "\n",
+        "For example, a colour image can be stored as a tensor of shape `[3, 224, 224]`, meaning `[colour_channels, height, width]`.\n",
+        "\n",
+        "Tensors come in different numbers of dimensions:\n",
+        "\n",
+        "| Name | What is it? | Number of dimensions (`ndim`) |\n",
+        "| ----- | ----- | ----- |\n",
+        "| **scalar** | a single number | 0 |\n",
+        "| **vector** | a list of numbers | 1 |\n",
+        "| **matrix** | a table of numbers (rows and columns) | 2 |\n",
+        "| **tensor** | numbers arranged in any number of dimensions | 0, 1, 2, 3, ... |\n",
+        "\n",
+        "![scalar vector matrix tensor and what they look like](https://raw.githubusercontent.com/mrdbourke/pytorch-deep-learning/main/images/00-scalar-vector-matrix-tensor.png)\n",
+        "\n",
+        "Two attributes describe every tensor:\n",
+        "* `ndim` - how many dimensions it has\n",
+        "* `shape` - how many elements there are along each dimension"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "_T9TpdQ5pRfw"
+      },
+      "outputs": [],
+      "source": [
+        "# Scalar: a single number, 0 dimensions\n",
+        "scalar = torch.tensor(7)\n",
+        "print(scalar)\n",
+        "print(\"ndim: \", scalar.ndim)\n",
+        "print(\"shape:\", scalar.shape)\n",
+        "print(\"as a Python number:\", scalar.item())   # .item() only works on one-element tensors"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "G3nl3YQIpRfw"
+      },
+      "outputs": [],
+      "source": [
+        "# Vector: 1 dimension\n",
+        "vector = torch.tensor([7, 7])\n",
+        "print(vector)\n",
+        "print(\"ndim: \", vector.ndim)\n",
+        "print(\"shape:\", vector.shape)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "yT-7wv1HpRfx"
+      },
+      "outputs": [],
+      "source": [
+        "# Matrix: 2 dimensions (rows, columns)\n",
+        "MATRIX = torch.tensor([[7, 8],\n",
+        "                       [9, 10]])\n",
+        "print(MATRIX)\n",
+        "print(\"ndim: \", MATRIX.ndim)\n",
+        "print(\"shape:\", MATRIX.shape)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "eLtNVQ2zpRfx"
+      },
+      "outputs": [],
+      "source": [
+        "# Tensor: 3 dimensions here\n",
+        "TENSOR = torch.tensor([[[1, 2, 3],\n",
+        "                        [3, 6, 9],\n",
+        "                        [2, 4, 5]]])\n",
+        "print(TENSOR)\n",
+        "print(\"ndim: \", TENSOR.ndim)\n",
+        "print(\"shape:\", TENSOR.shape)   # 1 block of 3 rows and 3 columns"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "TUJG0JbnpRfx"
+      },
+      "source": [
+        "**Tip:** the number of dimensions equals the number of opening square brackets `[` at the start of the tensor. `[[[` means 3 dimensions.\n",
+        "\n",
+        "The shape is read from the outside in: `torch.Size([1, 3, 3])` means 1 block, each with 3 rows, each with 3 values."
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "DmV5fogcpRfx"
+      },
+      "source": [
+        "## 3. Creating tensors\n",
+        "\n",
+        "You will rarely type tensors by hand. A neural network starts with tensors full of **random numbers** and then adjusts them as it learns:\n",
+        "\n",
+        "`start with random numbers -> look at data -> update the numbers -> look at data -> update the numbers ...`\n",
+        "\n",
+        "The most useful functions for creating tensors are:\n",
+        "\n",
+        "| Function | What it creates |\n",
+        "| ----- | ----- |\n",
+        "| `torch.rand(size)` | random numbers between 0 and 1 |\n",
+        "| `torch.zeros(size)` | all zeros |\n",
+        "| `torch.ones(size)` | all ones |\n",
+        "| `torch.arange(start, end, step)` | a range of numbers (`end` is not included) |\n",
+        "| `torch.zeros_like(x)`, `torch.ones_like(x)` | zeros or ones with the same shape as `x` |"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "ldWvvw6cpRfx"
+      },
+      "outputs": [],
+      "source": [
+        "# Random tensor with 3 rows and 4 columns\n",
+        "random_tensor = torch.rand(size=(3, 4))\n",
+        "print(random_tensor)\n",
+        "\n",
+        "# Random tensor in the shape of an image: [colour_channels, height, width]\n",
+        "random_image = torch.rand(size=(3, 224, 224))\n",
+        "print(random_image.shape, random_image.ndim)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "jXMRMKZWpRfy"
+      },
+      "outputs": [],
+      "source": [
+        "# Zeros and ones\n",
+        "zeros = torch.zeros(size=(3, 4))\n",
+        "ones = torch.ones(size=(3, 4))\n",
+        "print(zeros)\n",
+        "print(ones)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "zM9pxA6GpRfy"
+      },
+      "outputs": [],
+      "source": [
+        "# A range of numbers: start=0, end=10 (not included), step=1\n",
+        "zero_to_nine = torch.arange(start=0, end=10, step=1)\n",
+        "print(zero_to_nine)\n",
+        "\n",
+        "# Zeros with the same shape as another tensor\n",
+        "print(torch.zeros_like(zero_to_nine))"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "tsCrkcr2pRfy"
+      },
+      "source": [
+        "## 4. Tensor datatypes\n",
+        "\n",
+        "Every tensor has a datatype (`dtype`). The ones you will meet most often:\n",
+        "\n",
+        "| dtype | Meaning | When you see it |\n",
+        "| ----- | ----- | ----- |\n",
+        "| `torch.float32` | decimal numbers, 32 bits | the default for decimal values, used by most models |\n",
+        "| `torch.int64` | whole numbers, 64 bits | the default for whole numbers, used for labels and indexes |\n",
+        "| `torch.float16` | decimal numbers, 16 bits | smaller and faster, but less precise |\n",
+        "\n",
+        "You choose the datatype with the `dtype` parameter, and you change it later with `.type()`."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "f9bcgfTupRfy"
+      },
+      "outputs": [],
+      "source": [
+        "# Decimal values give float32 by default\n",
+        "float_32_tensor = torch.tensor([3.0, 6.0, 9.0])\n",
+        "print(float_32_tensor.dtype)\n",
+        "\n",
+        "# Whole numbers give int64 by default\n",
+        "int_tensor = torch.tensor([3, 6, 9])\n",
+        "print(int_tensor.dtype)\n",
+        "\n",
+        "# Choose the datatype when creating the tensor\n",
+        "float_16_tensor = torch.tensor([3.0, 6.0, 9.0], dtype=torch.float16)\n",
+        "print(float_16_tensor.dtype)\n",
+        "\n",
+        "# Change the datatype of an existing tensor\n",
+        "converted = int_tensor.type(torch.float32)\n",
+        "print(converted, converted.dtype)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "JlaWy1WIpRfy"
+      },
+      "source": [
+        "## 5. Getting information from a tensor\n",
+        "\n",
+        "Most PyTorch errors come from one of three things. When something breaks, check them in this order:\n",
+        "\n",
+        "* `shape` - **what shape** is the tensor?\n",
+        "* `dtype` - **what datatype** is it?\n",
+        "* `device` - **where** is it stored (CPU or GPU)?"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "b1ergYBCpRfy"
+      },
+      "outputs": [],
+      "source": [
+        "some_tensor = torch.rand(3, 4)\n",
+        "\n",
+        "print(some_tensor)\n",
+        "print(f\"Shape of tensor: {some_tensor.shape}\")\n",
+        "print(f\"Datatype of tensor: {some_tensor.dtype}\")\n",
+        "print(f\"Device tensor is stored on: {some_tensor.device}\")   # CPU by default"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "hFsm8BhMpRfy"
+      },
+      "source": [
+        "## 6. Tensor operations\n",
+        "\n",
+        "A neural network is built from a small set of operations on tensors: addition, subtraction, multiplication, division and **matrix multiplication**.\n",
+        "\n",
+        "### 6.1 Basic operations\n",
+        "\n",
+        "These work element by element."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "zLPb3DGBpRfy"
+      },
+      "outputs": [],
+      "source": [
+        "tensor = torch.tensor([1, 2, 3])\n",
+        "\n",
+        "print(tensor + 10)   # add 10 to every element\n",
+        "print(tensor - 10)   # subtract 10 from every element\n",
+        "print(tensor * 10)   # multiply every element by 10\n",
+        "print(tensor / 10)   # divide every element by 10\n",
+        "\n",
+        "# The original tensor does not change unless you reassign it\n",
+        "print(tensor)\n",
+        "tensor = tensor + 10\n",
+        "print(tensor)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "4MjO3luIpRfy"
+      },
+      "source": [
+        "### 6.2 Element-wise multiplication vs matrix multiplication\n",
+        "\n",
+        "For a tensor with values `[1, 2, 3]`:\n",
+        "\n",
+        "| Operation | Calculation | Code |\n",
+        "| ----- | ----- | ----- |\n",
+        "| **Element-wise multiplication** | `[1*1, 2*2, 3*3]` = `[1, 4, 9]` | `tensor * tensor` |\n",
+        "| **Matrix multiplication** | `1*1 + 2*2 + 3*3` = `14` | `torch.matmul(tensor, tensor)` or `tensor @ tensor` |"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "YYWs1ulZpRfy"
+      },
+      "outputs": [],
+      "source": [
+        "tensor = torch.tensor([1, 2, 3])\n",
+        "\n",
+        "print(\"Element-wise:\", tensor * tensor)\n",
+        "print(\"Matrix multiplication:\", torch.matmul(tensor, tensor))\n",
+        "print(\"Matrix multiplication with @:\", tensor @ tensor)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "5ieRAouepRfy"
+      },
+      "source": [
+        "### 6.3 The two rules of matrix multiplication\n",
+        "\n",
+        "1. The **inner dimensions** must match:\n",
+        "  * `(3, 2) @ (3, 2)` will not work\n",
+        "  * `(2, 3) @ (3, 2)` will work\n",
+        "  * `(3, 2) @ (2, 3)` will work\n",
+        "2. The result has the shape of the **outer dimensions**:\n",
+        "  * `(2, 3) @ (3, 2)` -> `(2, 2)`\n",
+        "  * `(3, 2) @ (2, 3)` -> `(3, 3)`\n",
+        "\n",
+        "Breaking rule 1 gives a **shape error**, one of the most common errors in deep learning."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "MOvdQ9UupRfz"
+      },
+      "outputs": [],
+      "source": [
+        "tensor_A = torch.tensor([[1., 2.],\n",
+        "                         [3., 4.],\n",
+        "                         [5., 6.]])     # shape (3, 2)\n",
+        "\n",
+        "tensor_B = torch.tensor([[7., 10.],\n",
+        "                         [8., 11.],\n",
+        "                         [9., 12.]])    # shape (3, 2)\n",
+        "\n",
+        "# (3, 2) @ (3, 2): the inner dimensions 2 and 3 do not match, so this fails\n",
+        "try:\n",
+        "    torch.matmul(tensor_A, tensor_B)\n",
+        "except RuntimeError as error:\n",
+        "    print(\"Error:\", error)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "HjJkhKCspRfz"
+      },
+      "source": [
+        "To fix it, **transpose** one of the tensors with `.T`. Transposing swaps rows and columns, so a `(3, 2)` tensor becomes `(2, 3)`."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "meGJ-gZUpRfz"
+      },
+      "outputs": [],
+      "source": [
+        "print(\"tensor_B shape:  \", tensor_B.shape)\n",
+        "print(\"tensor_B.T shape:\", tensor_B.T.shape)\n",
+        "\n",
+        "# (3, 2) @ (2, 3): the inner dimensions match, the result is (3, 3)\n",
+        "output = torch.matmul(tensor_A, tensor_B.T)\n",
+        "print(output)\n",
+        "print(\"Output shape:\", output.shape)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "fq_0YomSpRfz"
+      },
+      "source": [
+        "## 7. Aggregation (min, max, mean, sum)\n",
+        "\n",
+        "Aggregation turns many values into fewer values.\n",
+        "\n",
+        "`argmin()` and `argmax()` return the **position (index)** of the smallest and largest value, not the value itself."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "998_1CaDpRfz"
+      },
+      "outputs": [],
+      "source": [
+        "x = torch.arange(0, 100, 10)\n",
+        "print(x)\n",
+        "\n",
+        "print(f\"Minimum: {x.min()}\")\n",
+        "print(f\"Maximum: {x.max()}\")\n",
+        "print(f\"Sum: {x.sum()}\")\n",
+        "\n",
+        "# mean() needs a float tensor, so convert the datatype first\n",
+        "print(f\"Mean: {x.type(torch.float32).mean()}\")\n",
+        "\n",
+        "print(f\"Index of the minimum value: {x.argmin()}\")\n",
+        "print(f\"Index of the maximum value: {x.argmax()}\")"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "cOgSWGFdpRfz"
+      },
+      "source": [
+        "## 8. Changing the shape of a tensor\n",
+        "\n",
+        "Models need tensors in the right shape. These methods change the shape without changing the values:\n",
+        "\n",
+        "| Method | What it does |\n",
+        "| ----- | ----- |\n",
+        "| `x.reshape(shape)` | gives `x` a new shape (the total number of elements must stay the same) |\n",
+        "| `torch.stack([a, b], dim)` | joins tensors along a **new** dimension |\n",
+        "| `x.squeeze()` | removes all dimensions of size 1 |\n",
+        "| `x.unsqueeze(dim)` | adds a dimension of size 1 at position `dim` |\n",
+        "| `x.permute(dims)` | rearranges the order of the dimensions |"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "SxnwUzVApRfz"
+      },
+      "outputs": [],
+      "source": [
+        "x = torch.arange(1., 9.)\n",
+        "print(x, x.shape)\n",
+        "\n",
+        "# reshape: 8 elements can become 2 rows of 4\n",
+        "x_reshaped = x.reshape(2, 4)\n",
+        "print(x_reshaped, x_reshaped.shape)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "Sri1mvhwpRfz"
+      },
+      "outputs": [],
+      "source": [
+        "# stack: join tensors along a new dimension\n",
+        "a = torch.tensor([1, 2, 3])\n",
+        "b = torch.tensor([4, 5, 6])\n",
+        "\n",
+        "print(torch.stack([a, b], dim=0))   # a and b become rows,    shape (2, 3)\n",
+        "print(torch.stack([a, b], dim=1))   # a and b become columns, shape (3, 2)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "qGVnN9GrpRfz"
+      },
+      "outputs": [],
+      "source": [
+        "# squeeze: remove dimensions of size 1\n",
+        "y = torch.rand(1, 5)\n",
+        "y_squeezed = y.squeeze()\n",
+        "print(\"Before squeeze:\", y.shape)\n",
+        "print(\"After squeeze: \", y_squeezed.shape)\n",
+        "\n",
+        "# unsqueeze: add a dimension of size 1\n",
+        "y_unsqueezed = y_squeezed.unsqueeze(dim=0)\n",
+        "print(\"After unsqueeze(dim=0):\", y_unsqueezed.shape)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "K5c82ooYpRfz"
+      },
+      "outputs": [],
+      "source": [
+        "# permute: rearrange the dimensions\n",
+        "# Example: an image stored as [height, width, colour_channels]\n",
+        "image = torch.rand(size=(224, 224, 3))\n",
+        "\n",
+        "# PyTorch models expect [colour_channels, height, width]\n",
+        "image_permuted = image.permute(2, 0, 1)   # old dimension 2 goes first, then 0, then 1\n",
+        "\n",
+        "print(\"Before permute:\", image.shape)\n",
+        "print(\"After permute: \", image_permuted.shape)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "xbhxpZnzpRfz"
+      },
+      "source": [
+        "## 9. Indexing (selecting data from tensors)\n",
+        "\n",
+        "Indexing works like Python lists and NumPy arrays. You index from the outer dimension to the inner dimension. Use `:` to mean \"everything in this dimension\"."
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "`torch.Size([1, 3, 3])`.\n",
+        "\n",
+        "The dimensions go outer to inner.\n",
+        "\n",
+        "That means there's 1 dimension of 3 by 3.\n",
+        "\n",
+        "![example of different tensor dimensions](https://raw.githubusercontent.com/mrdbourke/pytorch-deep-learning/main/images/00-pytorch-different-tensor-dimensions.png)\n",
+        "\n",
+        "> **Note:** You might've noticed me using lowercase letters for `scalar` and `vector` and uppercase letters for `MATRIX` and `TENSOR`. This was on purpose. In practice, you'll often see scalars and vectors denoted as lowercase letters such as `y` or `a`. And matrices and tensors denoted as uppercase letters such as `X` or `W`.\n",
+        ">\n",
+        "> You also might notice the names martrix and tensor used interchangably. This is common. Since in PyTorch you're often dealing with `torch.Tensor`s (hence the tensor name), however, the shape and dimensions of what's inside will dictate what it actually is.\n"
+      ],
+      "metadata": {
+        "id": "WXUuFSrYqnj5"
+      }
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "3TemuKgFpRfz"
+      },
+      "outputs": [],
+      "source": [
+        "x = torch.arange(1, 10).reshape(1, 3, 3)\n",
+        "print(x, x.shape)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "lR2RWptvpRfz"
+      },
+      "outputs": [],
+      "source": [
+        "print(x[0])          # the first (and only) block: a 3x3 matrix\n",
+        "print(x[0][0])       # the first row of that block\n",
+        "print(x[0][0][0])    # the first value of that row\n",
+        "\n",
+        "# The same thing with commas\n",
+        "print(x[0, 1, 1])    # block 0, row 1, column 1 -> 5\n",
+        "print(x[0, 1, :])    # block 0, row 1, all columns -> [4, 5, 6]\n",
+        "print(x[0, :, 1])    # block 0, all rows, column 1 -> [2, 5, 8]"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "RjtzJb9cpRf0"
+      },
+      "source": [
+        "## 10. PyTorch and NumPy\n",
+        "\n",
+        "Data often arrives as a NumPy array, and plotting libraries expect NumPy arrays, so you need to convert in both directions:\n",
+        "\n",
+        "* `torch.from_numpy(array)` - NumPy array -> PyTorch tensor\n",
+        "* `tensor.numpy()` - PyTorch tensor -> NumPy array\n",
+        "\n",
+        "Note: NumPy uses `float64` by default while PyTorch uses `float32`. The conversion keeps the original datatype."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "Yuk0hK42pRf0"
+      },
+      "outputs": [],
+      "source": [
+        "import numpy as np\n",
+        "\n",
+        "# NumPy array -> tensor\n",
+        "array = np.arange(1.0, 8.0)\n",
+        "tensor = torch.from_numpy(array)\n",
+        "print(array, array.dtype)\n",
+        "print(tensor)\n",
+        "\n",
+        "# Convert to float32 if you need the PyTorch default\n",
+        "print(tensor.type(torch.float32).dtype)\n",
+        "\n",
+        "# Tensor -> NumPy array\n",
+        "tensor = torch.ones(7)\n",
+        "numpy_array = tensor.numpy()\n",
+        "print(numpy_array, numpy_array.dtype)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "pWlKW--ppRf0"
+      },
+      "source": [
+        "## 11. Reproducibility (random seed)\n",
+        "\n",
+        "`torch.rand()` gives different numbers every time. That makes experiments hard to repeat.\n",
+        "\n",
+        "`torch.manual_seed(seed)` fixes the starting point of the random number generator, so the same seed always gives the same \"random\" numbers.\n",
+        "\n",
+        "Important: call `torch.manual_seed()` again before **each** random call that you want to repeat."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "2w7Uz_LTpRf1"
+      },
+      "outputs": [],
+      "source": [
+        "# Without a seed: two different tensors\n",
+        "random_tensor_A = torch.rand(3, 4)\n",
+        "random_tensor_B = torch.rand(3, 4)\n",
+        "print(random_tensor_A == random_tensor_B)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "yG8K-dNXpRf1"
+      },
+      "outputs": [],
+      "source": [
+        "# With a seed: two identical tensors\n",
+        "RANDOM_SEED = 42\n",
+        "\n",
+        "torch.manual_seed(RANDOM_SEED)\n",
+        "random_tensor_C = torch.rand(3, 4)\n",
+        "\n",
+        "torch.manual_seed(RANDOM_SEED)    # set the seed again before the second call\n",
+        "random_tensor_D = torch.rand(3, 4)\n",
+        "\n",
+        "print(random_tensor_C)\n",
+        "print(random_tensor_D)\n",
+        "print(random_tensor_C == random_tensor_D)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "9enDwwGcpRf1"
+      },
+      "source": [
+        "## 12. Running tensors on a GPU\n",
+        "\n",
+        "A GPU does the maths of neural networks (mainly matrix multiplication) much faster than a CPU.\n",
+        "\n",
+        "The standard pattern is **device-agnostic code**: use the GPU if there is one, otherwise use the CPU. The same code then runs on any computer."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "FzfpWO5npRf1"
+      },
+      "outputs": [],
+      "source": [
+        "# Is a GPU available?\n",
+        "print(torch.cuda.is_available())\n",
+        "\n",
+        "# Device-agnostic setup\n",
+        "device = \"cuda\" if torch.cuda.is_available() else \"cpu\"\n",
+        "print(device)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "cQy07rF0pRf1"
+      },
+      "source": [
+        "Move a tensor to a device with `.to(device)`. This returns a copy, so reassign it if you want to keep the result.\n",
+        "\n",
+        "Two tensors must be on the **same device** before you can combine them."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "QXc7f5qbpRf1"
+      },
+      "outputs": [],
+      "source": [
+        "tensor = torch.tensor([1, 2, 3])\n",
+        "print(tensor, tensor.device)\n",
+        "\n",
+        "tensor_on_device = tensor.to(device)\n",
+        "print(tensor_on_device, tensor_on_device.device)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "-XnVkZumpRf1"
+      },
+      "source": [
+        "NumPy only works on the CPU. Calling `.numpy()` on a GPU tensor gives an error, so bring the tensor back with `.cpu()` first."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "uMENTGmHpRf1"
+      },
+      "outputs": [],
+      "source": [
+        "tensor_back_on_cpu = tensor_on_device.cpu().numpy()\n",
+        "print(tensor_back_on_cpu)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Remember, matrix multiplication is all you need!\n",
+        "\n",
+        "![matrix multiplication is all you need](https://raw.githubusercontent.com/mrdbourke/pytorch-deep-learning/main/images/00_matrix_multiplication_is_all_you_need.jpeg)\n",
+        "\n",
+        "*When you start digging into neural network layers and building your own, you'll find matrix multiplications everywhere. **Source:** https://marksaroufim.substack.com/p/working-class-deep-learner*"
+      ],
+      "metadata": {
+        "id": "BCJnL7UXrNVj"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "N0CWQ0k6pRf1"
+      },
+      "source": [
+        "---\n",
+        "# Part B: Exercises (100 marks)\n",
+        "\n",
+        "**Instructions**\n",
+        "\n",
+        "1. Replace every `None` with your own code. Do not rename the variables.\n",
+        "2. After each exercise, run the **Check** cell below it. It shows which sub-parts are correct and your marks for that exercise.\n",
+        "3. Do not edit the Check cells.\n",
+        "4. When you finish, run the last cell of the notebook to see your total out of 100.\n",
+        "\n",
+        "| Exercise | Topic | Marks |\n",
+        "| ----- | ----- | ----- |\n",
+        "| 1 | Creating tensors | 10 |\n",
+        "| 2 | Random tensors, zeros, ones and ranges | 10 |\n",
+        "| 3 | Datatypes and tensor information | 10 |\n",
+        "| 4 | Basic operations | 10 |\n",
+        "| 5 | Matrix multiplication | 10 |\n",
+        "| 6 | Aggregation | 10 |\n",
+        "| 7 | Reshaping and stacking | 10 |\n",
+        "| 8 | Squeeze, unsqueeze and permute | 10 |\n",
+        "| 9 | Indexing and NumPy | 10 |\n",
+        "| 10 | Reproducibility and GPU | 10 |\n",
+        "| | **Total** | **100** |\n",
+        "\n",
+        "Run the next cell once before you start."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "1-Zb-r-qpRf2"
+      },
+      "outputs": [],
+      "source": [
+        "# Setup for the exercises - run this cell once, do not edit\n",
+        "import torch\n",
+        "import numpy as np\n",
+        "\n",
+        "SCORES = {}\n",
+        "\n",
+        "\n",
+        "def same(a, b):\n",
+        "    \"\"\"True if a is a tensor with the same shape and the same values as b.\"\"\"\n",
+        "    b = torch.as_tensor(b)\n",
+        "    return (isinstance(a, torch.Tensor)\n",
+        "            and a.shape == b.shape\n",
+        "            and torch.allclose(a.detach().cpu().double(), b.detach().cpu().double()))\n",
+        "\n",
+        "\n",
+        "def grade(exercise, checks):\n",
+        "    \"\"\"Run the checks for one exercise and print the marks.\"\"\"\n",
+        "    earned = 0\n",
+        "    total = 0\n",
+        "    print(f\"Exercise {exercise}\")\n",
+        "    for description, marks, test in checks:\n",
+        "        total += marks\n",
+        "        try:\n",
+        "            passed = bool(test())\n",
+        "        except Exception:\n",
+        "            passed = False\n",
+        "        if passed:\n",
+        "            earned += marks\n",
+        "        result = \"PASS\" if passed else \"FAIL\"\n",
+        "        print(f\"  [{result}] {description}: {marks if passed else 0}/{marks}\")\n",
+        "    SCORES[exercise] = earned\n",
+        "    print(f\"  Marks for exercise {exercise}: {earned}/{total}\")"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "wm8JBzS_pRf2"
+      },
+      "source": [
+        "## Exercise 1: Creating tensors (10 marks)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "8uAYv6d2pRf2"
+      },
+      "outputs": [],
+      "source": [
+        "# (a) Create a scalar tensor with the value 42                                  [2 marks]\n",
+        "scalar = None\n",
+        "\n",
+        "# (b) Create a vector tensor with the values [1, 2, 3, 4]                       [2 marks]\n",
+        "vector = None\n",
+        "\n",
+        "# (c) Create a 2x3 matrix tensor with the values [[1, 2, 3], [4, 5, 6]]         [3 marks]\n",
+        "matrix = None\n",
+        "\n",
+        "# (d) Create a tensor of shape (2, 2, 2) holding the values 1 to 8,\n",
+        "#     using torch.arange and reshape                                            [3 marks]\n",
+        "tensor_3d = None\n",
+        "\n",
+        "for name, t in [(\"scalar\", scalar), (\"vector\", vector), (\"matrix\", matrix), (\"tensor_3d\", tensor_3d)]:\n",
+        "    if t is not None:\n",
+        "        print(f\"{name}: ndim = {t.ndim}, shape = {t.shape}\")"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "u-L4enzfpRf2"
+      },
+      "outputs": [],
+      "source": [
+        "# Check - do not edit\n",
+        "grade(1, [\n",
+        "    (\"(a) scalar with value 42\", 2, lambda: scalar.ndim == 0 and scalar.item() == 42),\n",
+        "    (\"(b) vector [1, 2, 3, 4]\", 2, lambda: same(vector, [1, 2, 3, 4])),\n",
+        "    (\"(c) 2x3 matrix\", 3, lambda: same(matrix, [[1, 2, 3], [4, 5, 6]])),\n",
+        "    (\"(d) 3D tensor of shape (2, 2, 2) with values 1 to 8\", 3,\n",
+        "     lambda: same(tensor_3d, torch.arange(1, 9).reshape(2, 2, 2))),\n",
+        "])"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "bv_YeabHpRf2"
+      },
+      "source": [
+        "## Exercise 2: Random tensors, zeros, ones and ranges (10 marks)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "nldvysCgpRf2"
+      },
+      "outputs": [],
+      "source": [
+        "# (a) Create a random tensor of shape (4, 4)                                    [2 marks]\n",
+        "random_tensor = None\n",
+        "\n",
+        "# (b) Create a random tensor in the shape of an image:\n",
+        "#     (3, 224, 224) = (colour_channels, height, width)                          [2 marks]\n",
+        "image_tensor = None\n",
+        "\n",
+        "# (c) Create a tensor of zeros with shape (5, 5)                                [2 marks]\n",
+        "zeros = None\n",
+        "\n",
+        "# (d) Create a tensor of ones with the same shape as base_tensor,\n",
+        "#     using torch.ones_like                                                     [2 marks]\n",
+        "base_tensor = torch.rand(3, 3)\n",
+        "ones_like_tensor = None\n",
+        "\n",
+        "# (e) Create the tensor [0, 2, 4, ..., 20] using torch.arange\n",
+        "#     (20 must be included)                                                     [2 marks]\n",
+        "range_tensor = None\n",
+        "\n",
+        "print(range_tensor)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "P4Elbsx8pRf2"
+      },
+      "outputs": [],
+      "source": [
+        "# Check - do not edit\n",
+        "grade(2, [\n",
+        "    (\"(a) random tensor of shape (4, 4)\", 2,\n",
+        "     lambda: random_tensor.shape == (4, 4) and random_tensor.is_floating_point()),\n",
+        "    (\"(b) image tensor of shape (3, 224, 224)\", 2,\n",
+        "     lambda: image_tensor.shape == (3, 224, 224) and image_tensor.is_floating_point()),\n",
+        "    (\"(c) zeros of shape (5, 5)\", 2, lambda: same(zeros, torch.zeros(5, 5))),\n",
+        "    (\"(d) ones with the shape of base_tensor\", 2, lambda: same(ones_like_tensor, torch.ones(3, 3))),\n",
+        "    (\"(e) range 0 to 20 with step 2\", 2, lambda: same(range_tensor, torch.arange(0, 21, 2))),\n",
+        "])"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "1ftEhOyLpRf2"
+      },
+      "source": [
+        "## Exercise 3: Datatypes and tensor information (10 marks)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "t7bvuTzLpRf2"
+      },
+      "outputs": [],
+      "source": [
+        "# (a) Create a tensor with the values [1.0, 2.0, 3.0] and dtype torch.float16   [3 marks]\n",
+        "float16_tensor = None\n",
+        "\n",
+        "# (b) Convert float16_tensor to torch.float32                                   [3 marks]\n",
+        "float32_tensor = None\n",
+        "\n",
+        "# (c) Create a random tensor of shape (2, 3, 4)                                 [1 mark]\n",
+        "info_tensor = None\n",
+        "\n",
+        "# (d) Store its shape, datatype and device in these three variables             [3 marks]\n",
+        "info_shape = None\n",
+        "info_dtype = None\n",
+        "info_device = None\n",
+        "\n",
+        "print(f\"Shape: {info_shape}\")\n",
+        "print(f\"Datatype: {info_dtype}\")\n",
+        "print(f\"Device: {info_device}\")"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "rMpFfpk3pRf2"
+      },
+      "outputs": [],
+      "source": [
+        "# Check - do not edit\n",
+        "grade(3, [\n",
+        "    (\"(a) float16 tensor [1.0, 2.0, 3.0]\", 3,\n",
+        "     lambda: float16_tensor.dtype == torch.float16 and same(float16_tensor, [1.0, 2.0, 3.0])),\n",
+        "    (\"(b) converted to float32\", 3,\n",
+        "     lambda: float32_tensor.dtype == torch.float32 and same(float32_tensor, [1.0, 2.0, 3.0])),\n",
+        "    (\"(c) random tensor of shape (2, 3, 4)\", 1, lambda: info_tensor.shape == (2, 3, 4)),\n",
+        "    (\"(d) shape stored in info_shape\", 1,\n",
+        "     lambda: info_shape is not None and tuple(info_shape) == (2, 3, 4)),\n",
+        "    (\"(d) datatype stored in info_dtype\", 1,\n",
+        "     lambda: isinstance(info_dtype, torch.dtype) and info_dtype == info_tensor.dtype),\n",
+        "    (\"(d) device stored in info_device\", 1,\n",
+        "     lambda: info_device is not None and str(info_device) == str(info_tensor.device)),\n",
+        "])"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "gCi2TVxwpRf2"
+      },
+      "source": [
+        "## Exercise 4: Basic operations (10 marks)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "0FpeNzWzpRf2"
+      },
+      "outputs": [],
+      "source": [
+        "tensor = torch.tensor([10, 20, 30])\n",
+        "\n",
+        "# (a) Add 5 to every element                                                    [2 marks]\n",
+        "added = None\n",
+        "\n",
+        "# (b) Subtract 10 from every element                                            [2 marks]\n",
+        "subtracted = None\n",
+        "\n",
+        "# (c) Multiply every element by 2                                               [3 marks]\n",
+        "multiplied = None\n",
+        "\n",
+        "# (d) Divide every element by 10                                                [3 marks]\n",
+        "divided = None\n",
+        "\n",
+        "print(added, subtracted, multiplied, divided)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "u8yPSSnbpRf3"
+      },
+      "outputs": [],
+      "source": [
+        "# Check - do not edit\n",
+        "grade(4, [\n",
+        "    (\"(a) add 5\", 2, lambda: same(added, [15, 25, 35])),\n",
+        "    (\"(b) subtract 10\", 2, lambda: same(subtracted, [0, 10, 20])),\n",
+        "    (\"(c) multiply by 2\", 3, lambda: same(multiplied, [20, 40, 60])),\n",
+        "    (\"(d) divide by 10\", 3, lambda: same(divided, [1, 2, 3])),\n",
+        "])"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "efnv-ff-pRf3"
+      },
+      "source": [
+        "## Exercise 5: Matrix multiplication (10 marks)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "Px5_caLppRf3"
+      },
+      "outputs": [],
+      "source": [
+        "torch.manual_seed(0)\n",
+        "A = torch.rand(2, 3)\n",
+        "B = torch.rand(3, 2)\n",
+        "\n",
+        "# (a) Matrix-multiply A and B                                                   [4 marks]\n",
+        "result_AB = None\n",
+        "\n",
+        "C = torch.tensor([[1., 2.],\n",
+        "                  [3., 4.],\n",
+        "                  [5., 6.]])      # shape (3, 2)\n",
+        "\n",
+        "D = torch.tensor([[7., 10.],\n",
+        "                  [8., 11.],\n",
+        "                  [9., 12.]])     # shape (3, 2)\n",
+        "\n",
+        "# (b) C and D cannot be matrix-multiplied as they are (shape error).\n",
+        "#     Fix the shapes with a transpose so that the result has shape (3, 3)       [6 marks]\n",
+        "result_CD = None\n",
+        "\n",
+        "print(result_AB)\n",
+        "print(result_CD)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "co_N2jn6pRf3"
+      },
+      "outputs": [],
+      "source": [
+        "# Check - do not edit\n",
+        "grade(5, [\n",
+        "    (\"(a) A matrix-multiplied by B, shape (2, 2)\", 4, lambda: same(result_AB, A @ B)),\n",
+        "    (\"(b) C and D multiplied after a transpose, shape (3, 3)\", 6, lambda: same(result_CD, C @ D.T)),\n",
+        "])"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "WsJ-1KcZpRf3"
+      },
+      "source": [
+        "## Exercise 6: Aggregation (10 marks)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "Ik2EoHr3pRf3"
+      },
+      "outputs": [],
+      "source": [
+        "agg_tensor = torch.arange(0, 101)    # the values 0, 1, 2, ..., 100\n",
+        "\n",
+        "# (a) Minimum value                                                             [2 marks]\n",
+        "min_value = None\n",
+        "\n",
+        "# (b) Maximum value                                                             [2 marks]\n",
+        "max_value = None\n",
+        "\n",
+        "# (c) Mean value (hint: mean() needs a float tensor)                            [2 marks]\n",
+        "mean_value = None\n",
+        "\n",
+        "# (d) Sum of all values                                                         [2 marks]\n",
+        "sum_value = None\n",
+        "\n",
+        "# (e) Index (position) of the minimum value                                     [1 mark]\n",
+        "min_index = None\n",
+        "\n",
+        "# (f) Index (position) of the maximum value                                     [1 mark]\n",
+        "max_index = None\n",
+        "\n",
+        "print(min_value, max_value, mean_value, sum_value, min_index, max_index)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "hy7Tmj17pRf3"
+      },
+      "outputs": [],
+      "source": [
+        "# Check - do not edit\n",
+        "grade(6, [\n",
+        "    (\"(a) minimum\", 2, lambda: float(min_value) == 0),\n",
+        "    (\"(b) maximum\", 2, lambda: float(max_value) == 100),\n",
+        "    (\"(c) mean\", 2, lambda: abs(float(mean_value) - 50.0) < 1e-4),\n",
+        "    (\"(d) sum\", 2, lambda: float(sum_value) == 5050),\n",
+        "    (\"(e) index of the minimum\", 1, lambda: int(min_index) == 0),\n",
+        "    (\"(f) index of the maximum\", 1, lambda: int(max_index) == 100),\n",
+        "])"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "tDljYHl-pRf3"
+      },
+      "source": [
+        "## Exercise 7: Reshaping and stacking (10 marks)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "Wiu7i3N6pRf3"
+      },
+      "outputs": [],
+      "source": [
+        "reshape_tensor = torch.arange(10)    # shape (10,)\n",
+        "\n",
+        "# (a) Reshape reshape_tensor to shape (2, 5)                                    [4 marks]\n",
+        "reshaped = None\n",
+        "\n",
+        "tensor1 = torch.tensor([[1, 2],\n",
+        "                        [3, 4]])\n",
+        "tensor2 = torch.tensor([[5, 6],\n",
+        "                        [7, 8]])\n",
+        "\n",
+        "# (b) Stack tensor1 and tensor2 along dim=0 using torch.stack                   [3 marks]\n",
+        "stacked_dim0 = None\n",
+        "\n",
+        "# (c) Stack tensor1 and tensor2 along dim=1 using torch.stack                   [3 marks]\n",
+        "stacked_dim1 = None\n",
+        "\n",
+        "print(reshaped)\n",
+        "print(stacked_dim0)\n",
+        "print(stacked_dim1)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "BOnBDwJNpRf3"
+      },
+      "outputs": [],
+      "source": [
+        "# Check - do not edit\n",
+        "grade(7, [\n",
+        "    (\"(a) reshaped to (2, 5)\", 4, lambda: same(reshaped, torch.arange(10).reshape(2, 5))),\n",
+        "    (\"(b) stacked along dim=0\", 3, lambda: same(stacked_dim0, torch.stack([tensor1, tensor2], dim=0))),\n",
+        "    (\"(c) stacked along dim=1\", 3, lambda: same(stacked_dim1, torch.stack([tensor1, tensor2], dim=1))),\n",
+        "])"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "k7lv1ns7pRf3"
+      },
+      "source": [
+        "## Exercise 8: Squeeze, unsqueeze and permute (10 marks)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "yl5bbuTRpRf3"
+      },
+      "outputs": [],
+      "source": [
+        "squeeze_tensor = torch.rand(1, 3, 1)\n",
+        "\n",
+        "# (a) Remove all dimensions of size 1 from squeeze_tensor -> shape (3,)         [3 marks]\n",
+        "squeezed = None\n",
+        "\n",
+        "# (b) Add a dimension of size 1 at dim=0 to squeezed -> shape (1, 3)            [3 marks]\n",
+        "unsqueezed = None\n",
+        "\n",
+        "image_chw = torch.rand(3, 100, 100)    # (colour_channels, height, width)\n",
+        "\n",
+        "# (c) Rearrange image_chw to (height, width, colour_channels) = (100, 100, 3)   [4 marks]\n",
+        "permuted = None\n",
+        "\n",
+        "for name, t in [(\"squeezed\", squeezed), (\"unsqueezed\", unsqueezed), (\"permuted\", permuted)]:\n",
+        "    if t is not None:\n",
+        "        print(f\"{name}: shape = {t.shape}\")"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "IPW8RTzdpRf3"
+      },
+      "outputs": [],
+      "source": [
+        "# Check - do not edit\n",
+        "grade(8, [\n",
+        "    (\"(a) squeezed to shape (3,)\", 3, lambda: same(squeezed, squeeze_tensor.reshape(3))),\n",
+        "    (\"(b) unsqueezed to shape (1, 3)\", 3, lambda: same(unsqueezed, squeeze_tensor.reshape(1, 3))),\n",
+        "    (\"(c) permuted to shape (100, 100, 3)\", 4, lambda: same(permuted, image_chw.permute(1, 2, 0))),\n",
+        "])"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "JzNSaPe1pRf4"
+      },
+      "source": [
+        "## Exercise 9: Indexing and NumPy (10 marks)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "x9vqcurFpRf4"
+      },
+      "outputs": [],
+      "source": [
+        "index_tensor = torch.tensor([[[1, 2, 3],\n",
+        "                              [4, 5, 6],\n",
+        "                              [7, 8, 9]]])    # shape (1, 3, 3)\n",
+        "\n",
+        "# (a) Use indexing to get the value 5                                           [2 marks]\n",
+        "five = None\n",
+        "\n",
+        "# (b) Use indexing to get the second row [4, 5, 6]                              [2 marks]\n",
+        "second_row = None\n",
+        "\n",
+        "# (c) Use indexing to get the last column [3, 6, 9]                             [2 marks]\n",
+        "last_column = None\n",
+        "\n",
+        "numpy_array = np.array([1, 2, 3, 4])\n",
+        "\n",
+        "# (d) Convert numpy_array to a PyTorch tensor                                   [2 marks]\n",
+        "tensor_from_numpy = None\n",
+        "\n",
+        "pytorch_tensor = torch.tensor([5, 6, 7, 8])\n",
+        "\n",
+        "# (e) Convert pytorch_tensor to a NumPy array                                   [2 marks]\n",
+        "numpy_from_tensor = None\n",
+        "\n",
+        "print(five, second_row, last_column)\n",
+        "print(tensor_from_numpy, numpy_from_tensor)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "AhibhSu1pRf4"
+      },
+      "outputs": [],
+      "source": [
+        "# Check - do not edit\n",
+        "grade(9, [\n",
+        "    (\"(a) the value 5\", 2, lambda: isinstance(five, torch.Tensor) and five.numel() == 1 and five.item() == 5),\n",
+        "    (\"(b) the second row\", 2, lambda: same(second_row.flatten(), [4, 5, 6])),\n",
+        "    (\"(c) the last column\", 2, lambda: same(last_column.flatten(), [3, 6, 9])),\n",
+        "    (\"(d) NumPy array to tensor\", 2, lambda: same(tensor_from_numpy, [1, 2, 3, 4])),\n",
+        "    (\"(e) tensor to NumPy array\", 2,\n",
+        "     lambda: isinstance(numpy_from_tensor, np.ndarray) and np.array_equal(numpy_from_tensor, [5, 6, 7, 8])),\n",
+        "])"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "41bRXKDrpRf4"
+      },
+      "source": [
+        "## Exercise 10: Reproducibility and GPU (10 marks)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "xh5hU-xspRf4"
+      },
+      "outputs": [],
+      "source": [
+        "# (a) Use the seed 77 to create two random tensors of shape (2, 2)\n",
+        "#     that are exactly equal. Remember to set the seed before each one.         [4 marks]\n",
+        "rand1 = None\n",
+        "rand2 = None\n",
+        "\n",
+        "# (b) Set device to \"cuda\" if a GPU is available, otherwise \"cpu\"               [2 marks]\n",
+        "device = None\n",
+        "\n",
+        "my_tensor = torch.tensor([10, 20, 30])\n",
+        "\n",
+        "# (c) Move my_tensor to device                                                  [2 marks]\n",
+        "tensor_on_device = None\n",
+        "\n",
+        "# (d) Bring tensor_on_device back to the CPU and convert it to a NumPy array    [2 marks]\n",
+        "cpu_numpy = None\n",
+        "\n",
+        "print(rand1)\n",
+        "print(rand2)\n",
+        "print(device, tensor_on_device, cpu_numpy)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "mkIniTYIpRf4"
+      },
+      "outputs": [],
+      "source": [
+        "# Check - do not edit\n",
+        "def _seeded():\n",
+        "    torch.manual_seed(77)\n",
+        "    return torch.rand(2, 2)\n",
+        "\n",
+        "_expected_device = \"cuda\" if torch.cuda.is_available() else \"cpu\"\n",
+        "\n",
+        "grade(10, [\n",
+        "    (\"(a) two equal random tensors from seed 77\", 4,\n",
+        "     lambda: same(rand1, _seeded()) and same(rand2, _seeded())),\n",
+        "    (\"(b) device chosen correctly\", 2,\n",
+        "     lambda: device is not None and str(device).split(\":\")[0] == _expected_device),\n",
+        "    (\"(c) tensor moved to device\", 2,\n",
+        "     lambda: tensor_on_device.device.type == _expected_device and same(tensor_on_device, [10, 20, 30])),\n",
+        "    (\"(d) back on the CPU as a NumPy array\", 2,\n",
+        "     lambda: isinstance(cpu_numpy, np.ndarray) and np.array_equal(cpu_numpy, [10, 20, 30])),\n",
+        "])"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "cHcMdYyUpRf4"
+      },
+      "source": [
+        "---\n",
+        "## Total marks\n",
+        "\n",
+        "Run this cell after you have run all ten Check cells."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "nWEeEtUspRf4"
+      },
+      "outputs": [],
+      "source": [
+        "# Total - do not edit\n",
+        "print(\"Exercise   Marks\")\n",
+        "total = 0\n",
+        "for exercise in range(1, 11):\n",
+        "    marks = SCORES.get(exercise, 0)\n",
+        "    total += marks\n",
+        "    print(f\"{exercise:>8}   {marks:>2}/10\")\n",
+        "print(\"-\" * 16)\n",
+        "print(f\"TOTAL: {total}/100\")"
+      ]
+    }
+  ],
+  "metadata": {
+    "accelerator": "GPU",
+    "colab": {
+      "provenance": [],
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "display_name": "Python 3",
+      "language": "python",
+      "name": "python3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 0
+}
