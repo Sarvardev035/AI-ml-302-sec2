@@ -935,25 +935,51 @@
     },
     {
       "cell_type": "code",
-      "execution_count": null,
+      "execution_count": 10,
       "metadata": {
-        "id": "8uAYv6d2pRf2"
+        "id": "8uAYv6d2pRf2",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "f47038c2-fd98-4c08-ea27-9473d8784476"
       },
-      "outputs": [],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "tensor(42)\n",
+            "tensor([1, 2, 3, 4])\n",
+            "tensor([[1, 2, 3],\n",
+            "        [4, 5, 6]])\n",
+            "tensor([[[1, 2],\n",
+            "         [3, 4]],\n",
+            "\n",
+            "        [[5, 6],\n",
+            "         [7, 8]]])\n",
+            "scalar: ndim = 0, shape = torch.Size([])\n",
+            "vector: ndim = 1, shape = torch.Size([4])\n",
+            "matrix: ndim = 2, shape = torch.Size([2, 3])\n",
+            "tensor_3d: ndim = 3, shape = torch.Size([2, 2, 2])\n"
+          ]
+        }
+      ],
       "source": [
         "# (a) Create a scalar tensor with the value 42                                  [2 marks]\n",
-        "scalar = None\n",
-        "\n",
+        "scalar = torch.tensor(42)\n",
+        "print(scalar)\n",
         "# (b) Create a vector tensor with the values [1, 2, 3, 4]                       [2 marks]\n",
-        "vector = None\n",
+        "vector = torch.tensor([1, 2, 3, 4])\n",
+        "print(vector)\n",
         "\n",
         "# (c) Create a 2x3 matrix tensor with the values [[1, 2, 3], [4, 5, 6]]         [3 marks]\n",
-        "matrix = None\n",
+        "matrix = torch.tensor([[1, 2, 3], [4, 5, 6]])\n",
+        "print(matrix)\n",
         "\n",
         "# (d) Create a tensor of shape (2, 2, 2) holding the values 1 to 8,\n",
         "#     using torch.arange and reshape                                            [3 marks]\n",
-        "tensor_3d = None\n",
-        "\n",
+        "tensor_3d = torch.arange(1, 9).reshape(2, 2, 2)\n",
+        "print(tensor_3d)\n",
         "for name, t in [(\"scalar\", scalar), (\"vector\", vector), (\"matrix\", matrix), (\"tensor_3d\", tensor_3d)]:\n",
         "    if t is not None:\n",
         "        print(f\"{name}: ndim = {t.ndim}, shape = {t.shape}\")"
@@ -961,11 +987,28 @@
     },
     {
       "cell_type": "code",
-      "execution_count": null,
+      "execution_count": 47,
       "metadata": {
-        "id": "u-L4enzfpRf2"
+        "id": "u-L4enzfpRf2",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "030fd77e-0375-44aa-9def-f4a68b8f566d"
       },
-      "outputs": [],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Exercise 1\n",
+            "  [PASS] (a) scalar with value 42: 2/2\n",
+            "  [PASS] (b) vector [1, 2, 3, 4]: 2/2\n",
+            "  [PASS] (c) 2x3 matrix: 3/3\n",
+            "  [PASS] (d) 3D tensor of shape (2, 2, 2) with values 1 to 8: 3/3\n",
+            "  Marks for exercise 1: 10/10\n"
+          ]
+        }
+      ],
       "source": [
         "# Check - do not edit\n",
         "grade(1, [\n",
@@ -988,41 +1031,113 @@
     },
     {
       "cell_type": "code",
-      "execution_count": null,
+      "execution_count": 30,
       "metadata": {
-        "id": "nldvysCgpRf2"
+        "id": "nldvysCgpRf2",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "3a2c0d75-191e-475e-84be-d96245f1e2ab"
       },
-      "outputs": [],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "tensor([[0.8611, 0.9878, 0.0266, 0.4623],\n",
+            "        [0.7987, 0.0882, 0.0191, 0.8175],\n",
+            "        [0.5909, 0.1304, 0.0206, 0.7330],\n",
+            "        [0.9966, 0.4042, 0.8526, 0.2837]])\n",
+            "tensor([[[0.5747, 0.6985, 0.5403,  ..., 0.0188, 0.9989, 0.6708],\n",
+            "         [0.2860, 0.3950, 0.8524,  ..., 0.4024, 0.4680, 0.2023],\n",
+            "         [0.5148, 0.5141, 0.4141,  ..., 0.1184, 0.8058, 0.8426],\n",
+            "         ...,\n",
+            "         [0.6529, 0.3579, 0.8111,  ..., 0.8574, 0.0780, 0.7921],\n",
+            "         [0.6375, 0.6758, 0.3140,  ..., 0.2965, 0.1369, 0.2670],\n",
+            "         [0.4211, 0.3979, 0.2263,  ..., 0.9087, 0.7554, 0.3410]],\n",
+            "\n",
+            "        [[0.0369, 0.2262, 0.3079,  ..., 0.9664, 0.0992, 0.7967],\n",
+            "         [0.7169, 0.1603, 0.3532,  ..., 0.1131, 0.6821, 0.5751],\n",
+            "         [0.7657, 0.4202, 0.5328,  ..., 0.2425, 0.6833, 0.7972],\n",
+            "         ...,\n",
+            "         [0.2262, 0.7904, 0.6294,  ..., 0.7523, 0.0225, 0.4748],\n",
+            "         [0.2226, 0.6512, 0.7094,  ..., 0.5703, 0.8288, 0.5043],\n",
+            "         [0.9188, 0.3601, 0.9405,  ..., 0.0161, 0.5653, 0.7765]],\n",
+            "\n",
+            "        [[0.2546, 0.6740, 0.7904,  ..., 0.3735, 0.0633, 0.2833],\n",
+            "         [0.3882, 0.6516, 0.8143,  ..., 0.0765, 0.8897, 0.2120],\n",
+            "         [0.5323, 0.0151, 0.6203,  ..., 0.4873, 0.2628, 0.0560],\n",
+            "         ...,\n",
+            "         [0.3251, 0.2475, 0.9070,  ..., 0.3658, 0.4661, 0.6110],\n",
+            "         [0.9488, 0.2220, 0.3905,  ..., 0.3749, 0.0192, 0.1095],\n",
+            "         [0.8897, 0.8771, 0.7125,  ..., 0.4197, 0.6441, 0.7180]]])\n",
+            "tensor([[0., 0., 0., 0., 0.],\n",
+            "        [0., 0., 0., 0., 0.],\n",
+            "        [0., 0., 0., 0., 0.],\n",
+            "        [0., 0., 0., 0., 0.],\n",
+            "        [0., 0., 0., 0., 0.]])\n",
+            "tensor([[1., 1., 1.],\n",
+            "        [1., 1., 1.],\n",
+            "        [1., 1., 1.]])\n",
+            "tensor([ 0,  2,  4,  6,  8, 10, 12, 14, 16, 18, 20])\n",
+            "tensor([ 0,  2,  4,  6,  8, 10, 12, 14, 16, 18, 20])\n"
+          ]
+        }
+      ],
       "source": [
         "# (a) Create a random tensor of shape (4, 4)                                    [2 marks]\n",
-        "random_tensor = None\n",
+        "random_tensor = torch.rand(4,4)\n",
+        "print(random_tensor)\n",
         "\n",
         "# (b) Create a random tensor in the shape of an image:\n",
         "#     (3, 224, 224) = (colour_channels, height, width)                          [2 marks]\n",
-        "image_tensor = None\n",
+        "image_tensor = torch.rand(3,224,224)\n",
+        "print(image_tensor)\n",
         "\n",
         "# (c) Create a tensor of zeros with shape (5, 5)                                [2 marks]\n",
-        "zeros = None\n",
+        "zeros = torch.zeros(5,5)\n",
+        "print(zeros)\n",
         "\n",
         "# (d) Create a tensor of ones with the same shape as base_tensor,\n",
         "#     using torch.ones_like                                                     [2 marks]\n",
         "base_tensor = torch.rand(3, 3)\n",
-        "ones_like_tensor = None\n",
+        "ones_like_tensor = torch.ones_like(base_tensor)\n",
+        "print(ones_like_tensor)\n",
         "\n",
         "# (e) Create the tensor [0, 2, 4, ..., 20] using torch.arange\n",
         "#     (20 must be included)                                                     [2 marks]\n",
-        "range_tensor = None\n",
+        "range_tensor = torch.arange(0,21,2)\n",
+        "print(range_tensor)\n",
+        "\n",
         "\n",
         "print(range_tensor)"
       ]
     },
     {
       "cell_type": "code",
-      "execution_count": null,
+      "execution_count": 31,
       "metadata": {
-        "id": "P4Elbsx8pRf2"
+        "id": "P4Elbsx8pRf2",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "af3d39f5-b8f3-4d3c-95b0-82d9928eb466"
       },
-      "outputs": [],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Exercise 2\n",
+            "  [PASS] (a) random tensor of shape (4, 4): 2/2\n",
+            "  [PASS] (b) image tensor of shape (3, 224, 224): 2/2\n",
+            "  [PASS] (c) zeros of shape (5, 5): 2/2\n",
+            "  [PASS] (d) ones with the shape of base_tensor: 2/2\n",
+            "  [PASS] (e) range 0 to 20 with step 2: 2/2\n",
+            "  Marks for exercise 2: 10/10\n"
+          ]
+        }
+      ],
       "source": [
         "# Check - do not edit\n",
         "grade(2, [\n",
@@ -1047,25 +1162,50 @@
     },
     {
       "cell_type": "code",
-      "execution_count": null,
+      "execution_count": 20,
       "metadata": {
-        "id": "t7bvuTzLpRf2"
+        "id": "t7bvuTzLpRf2",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "770d3ee4-9cc4-4ad4-b369-9806b37cbdc2"
       },
-      "outputs": [],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "tensor([1., 2., 3.], dtype=torch.float16)\n",
+            "tensor([1., 2., 3.])\n",
+            "tensor([[[0.6477, 0.3595, 0.2902, 0.8719],\n",
+            "         [0.3751, 0.8855, 0.6678, 0.3391],\n",
+            "         [0.9466, 0.5753, 0.5087, 0.0406]],\n",
+            "\n",
+            "        [[0.3558, 0.9214, 0.4404, 0.7394],\n",
+            "         [0.9159, 0.3217, 0.8751, 0.0605],\n",
+            "         [0.7749, 0.6326, 0.4061, 0.7851]]])\n",
+            "Shape: torch.Size([2, 3, 4])\n",
+            "Datatype: torch.float32\n",
+            "Device: cpu\n"
+          ]
+        }
+      ],
       "source": [
         "# (a) Create a tensor with the values [1.0, 2.0, 3.0] and dtype torch.float16   [3 marks]\n",
-        "float16_tensor = None\n",
+        "float16_tensor = torch.tensor([1.0, 2.0, 3.0], dtype=torch.float16)\n",
+        "print(float16_tensor)\n",
         "\n",
         "# (b) Convert float16_tensor to torch.float32                                   [3 marks]\n",
-        "float32_tensor = None\n",
+        "float32_tensor = float16_tensor.type(torch.float32)\n",
+        "print(float32_tensor)\n",
         "\n",
         "# (c) Create a random tensor of shape (2, 3, 4)                                 [1 mark]\n",
-        "info_tensor = None\n",
-        "\n",
+        "info_tensor = torch.rand(2, 3, 4)\n",
         "# (d) Store its shape, datatype and device in these three variables             [3 marks]\n",
-        "info_shape = None\n",
-        "info_dtype = None\n",
-        "info_device = None\n",
+        "info_shape =shape = info_tensor.shape\n",
+        "info_dtype = datatype = info_tensor.dtype\n",
+        "info_device = device = info_tensor.device\n",
+        "print(info_tensor)\n",
         "\n",
         "print(f\"Shape: {info_shape}\")\n",
         "print(f\"Datatype: {info_dtype}\")\n",
@@ -1074,11 +1214,30 @@
     },
     {
       "cell_type": "code",
-      "execution_count": null,
+      "execution_count": 23,
       "metadata": {
-        "id": "rMpFfpk3pRf2"
+        "id": "rMpFfpk3pRf2",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "bafcf3c7-dbe7-4b88-ebd4-6b08521387ec"
       },
-      "outputs": [],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Exercise 3\n",
+            "  [PASS] (a) float16 tensor [1.0, 2.0, 3.0]: 3/3\n",
+            "  [PASS] (b) converted to float32: 3/3\n",
+            "  [PASS] (c) random tensor of shape (2, 3, 4): 1/1\n",
+            "  [PASS] (d) shape stored in info_shape: 1/1\n",
+            "  [PASS] (d) datatype stored in info_dtype: 1/1\n",
+            "  [PASS] (d) device stored in info_device: 1/1\n",
+            "  Marks for exercise 3: 10/10\n"
+          ]
+        }
+      ],
       "source": [
         "# Check - do not edit\n",
         "grade(3, [\n",
@@ -1107,36 +1266,65 @@
     },
     {
       "cell_type": "code",
-      "execution_count": null,
+      "execution_count": 21,
       "metadata": {
-        "id": "0FpeNzWzpRf2"
+        "id": "0FpeNzWzpRf2",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "7cc0e9ea-82b2-402b-dbf1-0e08845456ab"
       },
-      "outputs": [],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "tensor([15, 25, 35]) tensor([ 0, 10, 20]) tensor([20, 40, 60]) tensor([1., 2., 3.])\n"
+          ]
+        }
+      ],
       "source": [
         "tensor = torch.tensor([10, 20, 30])\n",
         "\n",
         "# (a) Add 5 to every element                                                    [2 marks]\n",
-        "added = None\n",
+        "added = tensor+5\n",
         "\n",
         "# (b) Subtract 10 from every element                                            [2 marks]\n",
-        "subtracted = None\n",
+        "subtracted = tensor-10\n",
         "\n",
         "# (c) Multiply every element by 2                                               [3 marks]\n",
-        "multiplied = None\n",
+        "multiplied = tensor*2\n",
         "\n",
         "# (d) Divide every element by 10                                                [3 marks]\n",
-        "divided = None\n",
+        "divided = tensor/10\n",
         "\n",
         "print(added, subtracted, multiplied, divided)"
       ]
     },
     {
       "cell_type": "code",
-      "execution_count": null,
+      "execution_count": 22,
       "metadata": {
-        "id": "u8yPSSnbpRf3"
+        "id": "u8yPSSnbpRf3",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "d5f7ab3f-ed48-436b-9cf9-ddb7d772341e"
       },
-      "outputs": [],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Exercise 4\n",
+            "  [PASS] (a) add 5: 2/2\n",
+            "  [PASS] (b) subtract 10: 2/2\n",
+            "  [PASS] (c) multiply by 2: 3/3\n",
+            "  [PASS] (d) divide by 10: 3/3\n",
+            "  Marks for exercise 4: 10/10\n"
+          ]
+        }
+      ],
       "source": [
         "# Check - do not edit\n",
         "grade(4, [\n",
@@ -1158,18 +1346,36 @@
     },
     {
       "cell_type": "code",
-      "execution_count": null,
+      "execution_count": 32,
       "metadata": {
-        "id": "Px5_caLppRf3"
+        "id": "Px5_caLppRf3",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "e69938aa-e5c0-422a-cd89-325ef017b3dc"
       },
-      "outputs": [],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "tensor([[0.6241, 0.9662],\n",
+            "        [0.4260, 0.5675]])\n",
+            "tensor([[ 27.,  30.,  33.],\n",
+            "        [ 61.,  68.,  75.],\n",
+            "        [ 95., 106., 117.]])\n"
+          ]
+        }
+      ],
       "source": [
         "torch.manual_seed(0)\n",
         "A = torch.rand(2, 3)\n",
         "B = torch.rand(3, 2)\n",
         "\n",
         "# (a) Matrix-multiply A and B                                                   [4 marks]\n",
-        "result_AB = None\n",
+        "result_AB = torch.matmul(A, B)\n",
+        "\n",
+        "torch.manual_seed(0)\n",
         "\n",
         "C = torch.tensor([[1., 2.],\n",
         "                  [3., 4.],\n",
@@ -1181,7 +1387,7 @@
         "\n",
         "# (b) C and D cannot be matrix-multiplied as they are (shape error).\n",
         "#     Fix the shapes with a transpose so that the result has shape (3, 3)       [6 marks]\n",
-        "result_CD = None\n",
+        "result_CD = torch.matmul(C, D.T)\n",
         "\n",
         "print(result_AB)\n",
         "print(result_CD)"
@@ -1189,11 +1395,26 @@
     },
     {
       "cell_type": "code",
-      "execution_count": null,
+      "execution_count": 33,
       "metadata": {
-        "id": "co_N2jn6pRf3"
+        "id": "co_N2jn6pRf3",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "3d8e4c8a-8072-4455-9b6b-e15262018378"
       },
-      "outputs": [],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Exercise 5\n",
+            "  [PASS] (a) A matrix-multiplied by B, shape (2, 2): 4/4\n",
+            "  [PASS] (b) C and D multiplied after a transpose, shape (3, 3): 6/6\n",
+            "  Marks for exercise 5: 10/10\n"
+          ]
+        }
+      ],
       "source": [
         "# Check - do not edit\n",
         "grade(5, [\n",
@@ -1213,42 +1434,73 @@
     },
     {
       "cell_type": "code",
-      "execution_count": null,
+      "execution_count": 34,
       "metadata": {
-        "id": "Ik2EoHr3pRf3"
+        "id": "Ik2EoHr3pRf3",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "07ac7bd6-46d5-4bea-d181-1e25417bb103"
       },
-      "outputs": [],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "tensor(0) tensor(100) tensor(50.) tensor(5050) tensor(0) tensor(100)\n"
+          ]
+        }
+      ],
       "source": [
         "agg_tensor = torch.arange(0, 101)    # the values 0, 1, 2, ..., 100\n",
         "\n",
         "# (a) Minimum value                                                             [2 marks]\n",
-        "min_value = None\n",
+        "min_value = torch.min(agg_tensor)\n",
         "\n",
         "# (b) Maximum value                                                             [2 marks]\n",
-        "max_value = None\n",
+        "max_value = torch.max(agg_tensor)\n",
         "\n",
         "# (c) Mean value (hint: mean() needs a float tensor)                            [2 marks]\n",
-        "mean_value = None\n",
+        "mean_value = torch.mean(agg_tensor.type(torch.float32))\n",
         "\n",
         "# (d) Sum of all values                                                         [2 marks]\n",
-        "sum_value = None\n",
+        "sum_value = torch.sum(agg_tensor)\n",
         "\n",
         "# (e) Index (position) of the minimum value                                     [1 mark]\n",
-        "min_index = None\n",
+        "min_index = torch.argmin(agg_tensor)\n",
         "\n",
         "# (f) Index (position) of the maximum value                                     [1 mark]\n",
-        "max_index = None\n",
+        "max_index = torch.argmax(agg_tensor)\n",
         "\n",
         "print(min_value, max_value, mean_value, sum_value, min_index, max_index)"
       ]
     },
     {
       "cell_type": "code",
-      "execution_count": null,
+      "execution_count": 35,
       "metadata": {
-        "id": "hy7Tmj17pRf3"
+        "id": "hy7Tmj17pRf3",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "a0a297e1-a90c-4b49-d819-b3fd44be1f2b"
       },
-      "outputs": [],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Exercise 6\n",
+            "  [PASS] (a) minimum: 2/2\n",
+            "  [PASS] (b) maximum: 2/2\n",
+            "  [PASS] (c) mean: 2/2\n",
+            "  [PASS] (d) sum: 2/2\n",
+            "  [PASS] (e) index of the minimum: 1/1\n",
+            "  [PASS] (f) index of the maximum: 1/1\n",
+            "  Marks for exercise 6: 10/10\n"
+          ]
+        }
+      ],
       "source": [
         "# Check - do not edit\n",
         "grade(6, [\n",
@@ -1272,16 +1524,39 @@
     },
     {
       "cell_type": "code",
-      "execution_count": null,
+      "execution_count": 37,
       "metadata": {
-        "id": "Wiu7i3N6pRf3"
+        "id": "Wiu7i3N6pRf3",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "8a04bd54-2677-4f37-e493-09cadde4e5c3"
       },
-      "outputs": [],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "tensor([[0, 1, 2, 3, 4],\n",
+            "        [5, 6, 7, 8, 9]])\n",
+            "tensor([[[1, 2],\n",
+            "         [3, 4]],\n",
+            "\n",
+            "        [[5, 6],\n",
+            "         [7, 8]]])\n",
+            "tensor([[[1, 2],\n",
+            "         [5, 6]],\n",
+            "\n",
+            "        [[3, 4],\n",
+            "         [7, 8]]])\n"
+          ]
+        }
+      ],
       "source": [
         "reshape_tensor = torch.arange(10)    # shape (10,)\n",
         "\n",
         "# (a) Reshape reshape_tensor to shape (2, 5)                                    [4 marks]\n",
-        "reshaped = None\n",
+        "reshaped = reshape_tensor.reshape(2,5)\n",
         "\n",
         "tensor1 = torch.tensor([[1, 2],\n",
         "                        [3, 4]])\n",
@@ -1289,10 +1564,10 @@
         "                        [7, 8]])\n",
         "\n",
         "# (b) Stack tensor1 and tensor2 along dim=0 using torch.stack                   [3 marks]\n",
-        "stacked_dim0 = None\n",
+        "stacked_dim0 = torch.stack([tensor1, tensor2], dim=0)\n",
         "\n",
         "# (c) Stack tensor1 and tensor2 along dim=1 using torch.stack                   [3 marks]\n",
-        "stacked_dim1 = None\n",
+        "stacked_dim1 = torch.stack([tensor1, tensor2], dim=1)\n",
         "\n",
         "print(reshaped)\n",
         "print(stacked_dim0)\n",
@@ -1301,11 +1576,27 @@
     },
     {
       "cell_type": "code",
-      "execution_count": null,
+      "execution_count": 38,
       "metadata": {
-        "id": "BOnBDwJNpRf3"
+        "id": "BOnBDwJNpRf3",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "335e31cc-15da-4da2-a8eb-f1f98384b6a5"
       },
-      "outputs": [],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Exercise 7\n",
+            "  [PASS] (a) reshaped to (2, 5): 4/4\n",
+            "  [PASS] (b) stacked along dim=0: 3/3\n",
+            "  [PASS] (c) stacked along dim=1: 3/3\n",
+            "  Marks for exercise 7: 10/10\n"
+          ]
+        }
+      ],
       "source": [
         "# Check - do not edit\n",
         "grade(7, [\n",
@@ -1326,24 +1617,37 @@
     },
     {
       "cell_type": "code",
-      "execution_count": null,
+      "execution_count": 39,
       "metadata": {
-        "id": "yl5bbuTRpRf3"
+        "id": "yl5bbuTRpRf3",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "e6aef375-7075-42cf-ccad-f44cc6c10f1f"
       },
-      "outputs": [],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "squeezed: shape = torch.Size([3])\n",
+            "unsqueezed: shape = torch.Size([1, 3])\n",
+            "permuted: shape = torch.Size([100, 100, 3])\n"
+          ]
+        }
+      ],
       "source": [
         "squeeze_tensor = torch.rand(1, 3, 1)\n",
         "\n",
         "# (a) Remove all dimensions of size 1 from squeeze_tensor -> shape (3,)         [3 marks]\n",
-        "squeezed = None\n",
+        "squeezed = squeeze_tensor.squeeze()\n",
         "\n",
         "# (b) Add a dimension of size 1 at dim=0 to squeezed -> shape (1, 3)            [3 marks]\n",
-        "unsqueezed = None\n",
-        "\n",
+        "unsqueezed = squeezed.unsqueeze(0)\n",
         "image_chw = torch.rand(3, 100, 100)    # (colour_channels, height, width)\n",
         "\n",
         "# (c) Rearrange image_chw to (height, width, colour_channels) = (100, 100, 3)   [4 marks]\n",
-        "permuted = None\n",
+        "permuted = image_chw.permute(1, 2, 0)\n",
         "\n",
         "for name, t in [(\"squeezed\", squeezed), (\"unsqueezed\", unsqueezed), (\"permuted\", permuted)]:\n",
         "    if t is not None:\n",
@@ -1352,11 +1656,27 @@
     },
     {
       "cell_type": "code",
-      "execution_count": null,
+      "execution_count": 40,
       "metadata": {
-        "id": "IPW8RTzdpRf3"
+        "id": "IPW8RTzdpRf3",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "56b3f329-ac51-49ef-f2ad-19d9f8f85136"
       },
-      "outputs": [],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Exercise 8\n",
+            "  [PASS] (a) squeezed to shape (3,): 3/3\n",
+            "  [PASS] (b) unsqueezed to shape (1, 3): 3/3\n",
+            "  [PASS] (c) permuted to shape (100, 100, 3): 4/4\n",
+            "  Marks for exercise 8: 10/10\n"
+          ]
+        }
+      ],
       "source": [
         "# Check - do not edit\n",
         "grade(8, [\n",
@@ -1377,34 +1697,47 @@
     },
     {
       "cell_type": "code",
-      "execution_count": null,
+      "execution_count": 42,
       "metadata": {
-        "id": "x9vqcurFpRf4"
+        "id": "x9vqcurFpRf4",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "1d711b10-ea98-4385-efaf-18468d14365c"
       },
-      "outputs": [],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "tensor(5) tensor([4, 5, 6]) tensor([3, 6, 9])\n",
+            "tensor([1, 2, 3, 4]) [5 6 7 8]\n"
+          ]
+        }
+      ],
       "source": [
         "index_tensor = torch.tensor([[[1, 2, 3],\n",
         "                              [4, 5, 6],\n",
         "                              [7, 8, 9]]])    # shape (1, 3, 3)\n",
         "\n",
         "# (a) Use indexing to get the value 5                                           [2 marks]\n",
-        "five = None\n",
+        "five = index_tensor[0][1][1]\n",
         "\n",
         "# (b) Use indexing to get the second row [4, 5, 6]                              [2 marks]\n",
-        "second_row = None\n",
+        "second_row = index_tensor[0][1]\n",
         "\n",
         "# (c) Use indexing to get the last column [3, 6, 9]                             [2 marks]\n",
-        "last_column = None\n",
+        "last_column = index_tensor[0][:,2]\n",
         "\n",
         "numpy_array = np.array([1, 2, 3, 4])\n",
         "\n",
         "# (d) Convert numpy_array to a PyTorch tensor                                   [2 marks]\n",
-        "tensor_from_numpy = None\n",
+        "tensor_from_numpy = torch.from_numpy(numpy_array)\n",
         "\n",
         "pytorch_tensor = torch.tensor([5, 6, 7, 8])\n",
         "\n",
         "# (e) Convert pytorch_tensor to a NumPy array                                   [2 marks]\n",
-        "numpy_from_tensor = None\n",
+        "numpy_from_tensor = pytorch_tensor.numpy()\n",
         "\n",
         "print(five, second_row, last_column)\n",
         "print(tensor_from_numpy, numpy_from_tensor)"
@@ -1412,11 +1745,29 @@
     },
     {
       "cell_type": "code",
-      "execution_count": null,
+      "execution_count": 43,
       "metadata": {
-        "id": "AhibhSu1pRf4"
+        "id": "AhibhSu1pRf4",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "bac9dec1-43a4-4f3b-e8a4-2c41188fdb71"
       },
-      "outputs": [],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Exercise 9\n",
+            "  [PASS] (a) the value 5: 2/2\n",
+            "  [PASS] (b) the second row: 2/2\n",
+            "  [PASS] (c) the last column: 2/2\n",
+            "  [PASS] (d) NumPy array to tensor: 2/2\n",
+            "  [PASS] (e) tensor to NumPy array: 2/2\n",
+            "  Marks for exercise 9: 10/10\n"
+          ]
+        }
+      ],
       "source": [
         "# Check - do not edit\n",
         "grade(9, [\n",
@@ -1440,27 +1791,45 @@
     },
     {
       "cell_type": "code",
-      "execution_count": null,
+      "execution_count": 44,
       "metadata": {
-        "id": "xh5hU-xspRf4"
+        "id": "xh5hU-xspRf4",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "7f948c38-d4a9-455d-b7b5-8e3fbf44722b"
       },
-      "outputs": [],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "tensor([[0.2919, 0.2857],\n",
+            "        [0.4021, 0.4645]])\n",
+            "tensor([[0.2919, 0.2857],\n",
+            "        [0.4021, 0.4645]])\n",
+            "cuda tensor([10, 20, 30], device='cuda:0') [10 20 30]\n"
+          ]
+        }
+      ],
       "source": [
         "# (a) Use the seed 77 to create two random tensors of shape (2, 2)\n",
         "#     that are exactly equal. Remember to set the seed before each one.         [4 marks]\n",
-        "rand1 = None\n",
-        "rand2 = None\n",
+        "torch.manual_seed(77)\n",
+        "rand1 = torch.rand(2, 2)\n",
+        "torch.manual_seed(77)\n",
+        "rand2 = torch.rand(2, 2)\n",
         "\n",
         "# (b) Set device to \"cuda\" if a GPU is available, otherwise \"cpu\"               [2 marks]\n",
-        "device = None\n",
+        "device = \"cuda\" if torch.cuda.is_available() else \"cpu\"\n",
         "\n",
         "my_tensor = torch.tensor([10, 20, 30])\n",
         "\n",
         "# (c) Move my_tensor to device                                                  [2 marks]\n",
-        "tensor_on_device = None\n",
+        "tensor_on_device = my_tensor.to(device)\n",
         "\n",
         "# (d) Bring tensor_on_device back to the CPU and convert it to a NumPy array    [2 marks]\n",
-        "cpu_numpy = None\n",
+        "cpu_numpy = tensor_on_device.cpu().numpy()\n",
         "\n",
         "print(rand1)\n",
         "print(rand2)\n",
@@ -1469,11 +1838,28 @@
     },
     {
       "cell_type": "code",
-      "execution_count": null,
+      "execution_count": 45,
       "metadata": {
-        "id": "mkIniTYIpRf4"
+        "id": "mkIniTYIpRf4",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "b54cbba7-69c0-4440-dc30-103265aa4127"
       },
-      "outputs": [],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Exercise 10\n",
+            "  [PASS] (a) two equal random tensors from seed 77: 4/4\n",
+            "  [PASS] (b) device chosen correctly: 2/2\n",
+            "  [PASS] (c) tensor moved to device: 2/2\n",
+            "  [PASS] (d) back on the CPU as a NumPy array: 2/2\n",
+            "  Marks for exercise 10: 10/10\n"
+          ]
+        }
+      ],
       "source": [
         "# Check - do not edit\n",
         "def _seeded():\n",
@@ -1508,11 +1894,35 @@
     },
     {
       "cell_type": "code",
-      "execution_count": null,
+      "execution_count": 48,
       "metadata": {
-        "id": "nWEeEtUspRf4"
+        "id": "nWEeEtUspRf4",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "147c324b-9a83-4520-84f0-d0f19d5f7163"
       },
-      "outputs": [],
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Exercise   Marks\n",
+            "       1   10/10\n",
+            "       2   10/10\n",
+            "       3   10/10\n",
+            "       4   10/10\n",
+            "       5   10/10\n",
+            "       6   10/10\n",
+            "       7   10/10\n",
+            "       8   10/10\n",
+            "       9   10/10\n",
+            "      10   10/10\n",
+            "----------------\n",
+            "TOTAL: 100/100\n"
+          ]
+        }
+      ],
       "source": [
         "# Total - do not edit\n",
         "print(\"Exercise   Marks\")\n",
